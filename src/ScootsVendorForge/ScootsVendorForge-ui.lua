@@ -300,8 +300,5 @@ ScootsVendorForge.setLevels = function()
 end
 
 ScootsVendorForge.moveScootsTokens = function()
-    if(STMasterFrame and STMasterFrame:IsVisible()) then
-        STMasterFrame:SetPoint('TOPLEFT', ScootsVendorForge.frames.master, 'TOPRIGHT', 0, -12)
-        ScootsVendorForge.ScootsTokensMoved = true
-    end
+    STMasterFrame:SetPoint('TOPLEFT', ScootsVendorForge.frames.master, 'TOPRIGHT', 0, -12)
 end

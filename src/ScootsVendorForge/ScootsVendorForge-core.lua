@@ -320,7 +320,7 @@ ScootsVendorForge.updateLoop = function(self, elapsed)
             end
         end
         
-        if(IsAddOnLoaded('ScootsTokens') and not ScootsVendorForge.ScootsTokensMoved) then
+        if(IsAddOnLoaded('ScootsTokens')) then
             ScootsVendorForge.moveScootsTokens()
         end
     end

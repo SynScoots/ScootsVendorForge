@@ -1,6 +1,6 @@
 ## Interface: 30300
 ## X-Compatible-With: 40000
-## Title: Scoots Vendor Forge
+## Title: Scoots Stats
 ## Notes: This allows you to automatically purchase and sell an item from a vendor until it reaches the desired forge level or you can no longer afford the item.
 ## Author: Scoots
 ## SavedVariablesPerCharacter: SCOOTSVENDORFORGE_OPTIONS
