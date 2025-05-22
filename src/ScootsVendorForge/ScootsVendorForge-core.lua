@@ -156,7 +156,8 @@ ScootsVendorForge.refreshPanel = function()
         local tags = GetItemTagsCustom(itemId)
         local rarity = select(3, GetItemInfo(itemLink))
         
-        if( rarity >= 2
+        if( rarity
+        and rarity >= 2
         and rarity <= 4
         and tags
         and bit.band(tags, 96) == 64
