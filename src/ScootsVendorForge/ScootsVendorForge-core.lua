@@ -117,7 +117,7 @@ ScootsVendorForge.refreshPanel = function()
     ScootsVendorForge.loadingText:Hide()
     
     -- Get inventory
-    local inventory = {}
+    ScootsVendorForge.inventory = {}
     local inventoryEquipment = {}
     for bagIndex = 0, 4 do
         local bagSlots = GetContainerNumSlots(bagIndex)
@@ -126,11 +126,11 @@ ScootsVendorForge.refreshPanel = function()
             local itemId = ScootsVendorForge.extractId(itemLink)
             
             if(itemLink ~= nil) then
-                if(inventory[itemLink] == nil) then
-                    inventory[itemLink] = 0
+                if(ScootsVendorForge.inventory[itemLink] == nil) then
+                    ScootsVendorForge.inventory[itemLink] = 0
                 end
                 
-                inventory[itemLink] = inventory[itemLink] + itemCount
+                ScootsVendorForge.inventory[itemLink] = ScootsVendorForge.inventory[itemLink] + itemCount
                 
                 if(IsEquippableItem(itemId)) then
                     local forgeLevel = GetItemLinkTitanforge(itemLink)
@@ -155,13 +155,13 @@ ScootsVendorForge.refreshPanel = function()
     end
     
     -- Get currencies
-    local currencies = {}
+    ScootsVendorForge.currencies = {}
     local numCurrencies = GetCurrencyListSize()
     for currencyIndex = 1, numCurrencies do
         local name, isHeader, _, _, _, count = GetCurrencyListInfo(currencyIndex)
         
         if(not isHeader) then
-            currencies[name] = count
+            ScootsVendorForge.currencies[name] = count
         end
     end
     

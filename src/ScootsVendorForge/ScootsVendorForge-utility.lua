@@ -166,12 +166,12 @@ ScootsVendorForge.canAfford = function(itemIndex, quantity)
                 if(currencyItemLink) then
                     local currencyItemName = GetItemInfo(currencyItemLink)
                     
-                    if(inventory[currencyItemLink] ~= nil) then
-                        if(inventory[currencyItemLink] < (currencyCount * quantity)) then
+                    if(ScootsVendorForge.inventory[currencyItemLink] ~= nil) then
+                        if(ScootsVendorForge.inventory[currencyItemLink] < (currencyCount * quantity)) then
                             return false
                         end
-                    elseif(currencies[currencyItemName] ~= nil) then
-                        if(currencies[currencyItemName] < currencyCount) then
+                    elseif(ScootsVendorForge.currencies[currencyItemName] ~= nil) then
+                        if(ScootsVendorForge.currencies[currencyItemName] < currencyCount) then
                             return false
                         end
                     else
