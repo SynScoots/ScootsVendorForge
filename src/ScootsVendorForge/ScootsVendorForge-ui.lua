@@ -86,15 +86,15 @@ ScootsVendorForge.createPanel = function()
     ScootsVendorForge.frames.scrollBar:SetPoint('BOTTOM', ScootsVendorForge.frames.scrollDownButton, 'TOP', 0, 2)
 
     ScootsVendorForge.frames.scrollFrame:SetScrollChild(ScootsVendorForge.frames.scrollChild)
-    ScootsVendorForge.frames.scrollFrame:SetPoint('TOPLEFT', ScootsVendorForge.frames.panel, 'TOPLEFT', 0, -50)
-    ScootsVendorForge.frames.scrollFrame:SetSize(ScootsVendorForge.panelWidth, 385)
+    ScootsVendorForge.frames.scrollFrame:SetPoint('TOPLEFT', ScootsVendorForge.frames.panel, 'TOPLEFT', 0, -65)
+    ScootsVendorForge.frames.scrollFrame:SetSize(ScootsVendorForge.panelWidth, 370)
     
     ScootsVendorForge.frames.scrollChild:SetWidth(ScootsVendorForge.frames.scrollFrame:GetWidth() - 23)
     
     -- Loading icon
     ScootsVendorForge.loadingIcon = ScootsVendorForge.frames.panel:CreateTexture(nil, 'BORDER')
     ScootsVendorForge.loadingIcon:SetTexture('Interface\\AddOns\\ScootsVendorForge\\Textures\\Loader')
-    ScootsVendorForge.loadingIcon:SetPoint('TOPLEFT', 5, -56)
+    ScootsVendorForge.loadingIcon:SetPoint('TOPLEFT', 5, -61)
     ScootsVendorForge.loadingIcon:SetSize(10, 10)
     ScootsVendorForge.loadingIcon:Hide()
     
@@ -105,7 +105,7 @@ ScootsVendorForge.createPanel = function()
     
     ScootsVendorForge.loadingText = ScootsVendorForge.frames.panel:CreateFontString(nil, 'ARTWORK')
     ScootsVendorForge.loadingText:SetFontObject('GameFontHighlightSmall')
-    ScootsVendorForge.loadingText:SetPoint('TOPLEFT', 20, -56)
+    ScootsVendorForge.loadingText:SetPoint('TOPLEFT', 20, -61)
     ScootsVendorForge.loadingText:SetJustifyH('LEFT')
     ScootsVendorForge.loadingText:SetText('Loading...')
     ScootsVendorForge.loadingText:Hide()
@@ -113,23 +113,113 @@ ScootsVendorForge.createPanel = function()
     -- Failed loading
     ScootsVendorForge.cacheFailText = ScootsVendorForge.frames.panel:CreateFontString(nil, 'ARTWORK')
     ScootsVendorForge.cacheFailText:SetFontObject('GameFontRedSmall')
-    ScootsVendorForge.cacheFailText:SetPoint('TOPLEFT', 4, -56)
+    ScootsVendorForge.cacheFailText:SetPoint('TOPLEFT', 4, -61)
     ScootsVendorForge.cacheFailText:SetJustifyH('LEFT')
     ScootsVendorForge.cacheFailText:SetText('Failed to cache merchant.' .. '\n' .. '/reload your UI and try again.')
     ScootsVendorForge.cacheFailText:Hide()
 end
 
 ScootsVendorForge.createOptions = function()
+    -- Quantity header
+    ScootsVendorForge.frames.panel.countLabel = ScootsVendorForge.frames.panel:CreateFontString(nil, 'ARTWORK')
+    ScootsVendorForge.frames.panel.countLabel:SetFontObject('GameFontHighlightSmall')
+    ScootsVendorForge.frames.panel.countLabel:SetPoint('TOPLEFT', 4, -22)
+    ScootsVendorForge.frames.panel.countLabel:SetJustifyH('LEFT')
+    ScootsVendorForge.frames.panel.countLabel:SetText('Buy:')
+    
+    -- Quantity: Decrement
+    ScootsVendorForge.frames.decrement = CreateFrame('Button', 'ScootsVendorForge-Quantity-DecrementButton', ScootsVendorForge.frames.panel)
+    ScootsVendorForge.frames.decrement:SetSize(19, 19)
+    ScootsVendorForge.frames.decrement:SetPoint('TOPLEFT', ScootsVendorForge.frames.panel, 'TOPLEFT', 4, -38)
+    ScootsVendorForge.frames.decrement:SetFrameStrata(ScootsVendorForge.frames.master:GetFrameStrata())
+    
+    ScootsVendorForge.frames.decrement:SetNormalTexture('Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Up')
+    ScootsVendorForge.frames.decrement:SetPushedTexture('Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Down')
+    ScootsVendorForge.frames.decrement:SetDisabledTexture('Interface\\Buttons\\UI-SpellbookIcon-PrevPage-Disabled')
+    ScootsVendorForge.frames.decrement:SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight', 'ADD')
+    
+    ScootsVendorForge.frames.decrement:SetScript('OnClick', function()
+        local check = ScootsVendorForge.frames.quantity:GetNumber()
+        if(check > 1) then
+            ScootsVendorForge.frames.quantity:SetText(tostring(check - 1))
+        end
+        
+        ScootsVendorForge.setOption('quantity', ScootsVendorForge.frames.quantity:GetNumber())
+    end)
+    
+    -- Quantity
+    ScootsVendorForge.frames.quantity = CreateFrame('EditBox', 'ScootsVendorForge-Quantity', ScootsVendorForge.frames.panel)
+    ScootsVendorForge.frames.quantity:SetSize(30, 19)
+    ScootsVendorForge.frames.quantity:SetPoint('TOPLEFT', ScootsVendorForge.frames.decrement, 'TOPRIGHT', 0, 0)
+    ScootsVendorForge.frames.quantity:SetFrameStrata(ScootsVendorForge.frames.master:GetFrameStrata())
+    ScootsVendorForge.frames.quantity:SetAutoFocus(false)
+    ScootsVendorForge.frames.quantity:SetMaxLetters(3)
+    ScootsVendorForge.frames.quantity:SetNumeric(true)
+    ScootsVendorForge.frames.quantity:SetFontObject('GameFontHighlightSmall')
+    ScootsVendorForge.frames.quantity:SetText(tostring(ScootsVendorForge.getOption('quantity')))
+    ScootsVendorForge.frames.quantity:SetJustifyH('CENTER')
+    
+    ScootsVendorForge.frames.quantity:SetScript('OnEnterPressed', EditBox_ClearFocus)
+    ScootsVendorForge.frames.quantity:SetScript('OnEscapePressed', EditBox_ClearFocus)
+    ScootsVendorForge.frames.quantity:SetScript('OnEditFocusGained', EditBox_HighlightText)
+    
+    ScootsVendorForge.frames.quantity:SetScript('OnEditFocusLost', function()
+        EditBox_ClearHighlight(ScootsVendorForge.frames.quantity)
+        
+        if(ScootsVendorForge.frames.quantity:GetNumber() < 1) then
+            ScootsVendorForge.frames.quantity:SetText('1')
+        end
+        
+        ScootsVendorForge.setOption('quantity', ScootsVendorForge.frames.quantity:GetNumber())
+    end)
+    
+    ScootsVendorForge.frames.quantity:SetScript('OnTextChanged', ScootsVendorForge.quantityOnTextChanged)
+    
+    ScootsVendorForge.frames.quantity.bgLeft = ScootsVendorForge.frames.quantity:CreateTexture(nil, 'BACKGROUND')
+    ScootsVendorForge.frames.quantity.bgLeft:SetTexture('Interface\\Common\\Common-Input-Border')
+    ScootsVendorForge.frames.quantity.bgLeft:SetSize(8, 19)
+    ScootsVendorForge.frames.quantity.bgLeft:SetPoint('LEFT', 0, 0)
+    ScootsVendorForge.frames.quantity.bgLeft:SetTexCoord(0, 0.0625, 0, 0.625)
+    
+    ScootsVendorForge.frames.quantity.bgRight = ScootsVendorForge.frames.quantity:CreateTexture(nil, 'BACKGROUND')
+    ScootsVendorForge.frames.quantity.bgRight:SetTexture('Interface\\Common\\Common-Input-Border')
+    ScootsVendorForge.frames.quantity.bgRight:SetSize(8, 19)
+    ScootsVendorForge.frames.quantity.bgRight:SetPoint('RIGHT', 0, 0)
+    ScootsVendorForge.frames.quantity.bgRight:SetTexCoord(0.9375, 1.0, 0, 0.625)
+    
+    ScootsVendorForge.frames.quantity.bgMiddle = ScootsVendorForge.frames.quantity:CreateTexture(nil, 'BACKGROUND')
+    ScootsVendorForge.frames.quantity.bgMiddle:SetTexture('Interface\\Common\\Common-Input-Border')
+    ScootsVendorForge.frames.quantity.bgMiddle:SetSize(10, 19)
+    ScootsVendorForge.frames.quantity.bgMiddle:SetPoint('LEFT', ScootsVendorForge.frames.quantity.bgLeft, 'RIGHT', 0, 0)
+    ScootsVendorForge.frames.quantity.bgMiddle:SetPoint('RIGHT', ScootsVendorForge.frames.quantity.bgRight, 'LEFT', 0, 0)
+    ScootsVendorForge.frames.quantity.bgMiddle:SetTexCoord(0.0625, 0.9375, 0, 0.625)
+    
+    -- Quantity: Increment
+    ScootsVendorForge.frames.increment = CreateFrame('Button', 'ScootsVendorForge-Quantity-IncrementButton', ScootsVendorForge.frames.panel)
+    ScootsVendorForge.frames.increment:SetSize(19, 19)
+    ScootsVendorForge.frames.increment:SetPoint('TOPLEFT', ScootsVendorForge.frames.quantity, 'TOPRIGHT', 0, 0)
+    ScootsVendorForge.frames.increment:SetFrameStrata(ScootsVendorForge.frames.master:GetFrameStrata())
+    
+    ScootsVendorForge.frames.increment:SetNormalTexture('Interface\\Buttons\\UI-SpellbookIcon-NextPage-Up')
+    ScootsVendorForge.frames.increment:SetPushedTexture('Interface\\Buttons\\UI-SpellbookIcon-NextPage-Down')
+    ScootsVendorForge.frames.increment:SetDisabledTexture('Interface\\Buttons\\UI-SpellbookIcon-NextPage-Disabled')
+    ScootsVendorForge.frames.increment:SetHighlightTexture('Interface\\Buttons\\UI-Common-MouseHilight', 'ADD')
+    
+    ScootsVendorForge.frames.increment:SetScript('OnClick', function()
+        ScootsVendorForge.frames.quantity:SetText(tostring(ScootsVendorForge.frames.quantity:GetNumber() + 1))
+        ScootsVendorForge.setOption('quantity', ScootsVendorForge.frames.quantity:GetNumber())
+    end)
+    
     -- Forge dropdown label
     ScootsVendorForge.frames.panel.forgeLabel = ScootsVendorForge.frames.panel:CreateFontString(nil, 'ARTWORK')
     ScootsVendorForge.frames.panel.forgeLabel:SetFontObject('GameFontHighlightSmall')
-    ScootsVendorForge.frames.panel.forgeLabel:SetPoint('TOPLEFT', 4, -28)
+    ScootsVendorForge.frames.panel.forgeLabel:SetPoint('TOPLEFT', 86, -22)
     ScootsVendorForge.frames.panel.forgeLabel:SetJustifyH('LEFT')
-    ScootsVendorForge.frames.panel.forgeLabel:SetText('Stop at: ')
+    ScootsVendorForge.frames.panel.forgeLabel:SetText('Until:')
     
     -- Forge dropdown
     ScootsVendorForge.frames.forgeLevel = CreateFrame('Frame', 'ScootsVendorForge-ForgeLevel', ScootsVendorForge.frames.panel, 'UIDropDownMenuTemplate')
-    ScootsVendorForge.frames.forgeLevel:SetPoint('TOPRIGHT', ScootsVendorForge.frames.panel, 'TOPRIGHT', -111, -20)
+    ScootsVendorForge.frames.forgeLevel:SetPoint('TOPRIGHT', ScootsVendorForge.frames.panel, 'TOPRIGHT', -111, -34)
     ScootsVendorForge.frames.forgeLevel:SetFrameStrata(ScootsVendorForge.frames.master:GetFrameStrata())
     
     ScootsVendorForge.selectedForgeLevelChoiceIndex = 1
@@ -147,7 +237,7 @@ ScootsVendorForge.createOptions = function()
     ScootsVendorForge.frames.panel.forgeLevelBackground = ScootsVendorForge.frames.panel:CreateTexture(nil, 'BORDER')
     ScootsVendorForge.frames.panel.forgeLevelBackground:SetTexture(0.75, 0.75, 1, 0.1)
     ScootsVendorForge.frames.panel.forgeLevelBackground:SetPoint('TOPRIGHT', -2, -21)
-    ScootsVendorForge.frames.panel.forgeLevelBackground:SetSize(ScootsVendorForge.panelWidth, 27)
+    ScootsVendorForge.frames.panel.forgeLevelBackground:SetSize(ScootsVendorForge.panelWidth, 42)
     
     -- Border
     ScootsVendorForge.frames.panel.forgeLevelBorder = ScootsVendorForge.frames.panel:CreateTexture(nil, 'BORDER')
@@ -252,6 +342,8 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
     
     ScootsVendorForge.frames.items[index]:SetScript('OnMouseDown', function(self, button)
         if(button == 'RightButton') then
+            EditBox_ClearFocus(ScootsVendorForge.frames.quantity)
+            
             StaticPopupDialogs['SCOOTSVENDORFORGE_CONFIRM'] = {
                 ['text'] = table.concat({
                     'This will purchase ' .. item.link .. ' until it forges at the designated level, or you can no longer afford it.',
@@ -268,6 +360,7 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
                 ['whileDead'] = true,
                 ['hideOnEscape'] = true
             }
+            
             StaticPopup_Show('SCOOTSVENDORFORGE_CONFIRM')
         end
     end)

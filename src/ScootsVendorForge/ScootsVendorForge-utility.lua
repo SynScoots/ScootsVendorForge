@@ -6,6 +6,7 @@ ScootsVendorForge.loadOptions = function()
     end
     
     ScootsVendorForge.options = {
+        ['quantity'] = 1,
         ['forgelevel'] = 1
     }
     
@@ -117,4 +118,69 @@ function ScootsVendorForge.getAttunementColours(forgeLevel)
     end
     
     return colours
+end
+
+ScootsVendorForge.noRefundPerkEnabled = function()
+    if(PerkMgrPerks) then
+        for perkId, perkData in pairs(PerkMgrPerks) do
+            if(perkData.name == 'Disable Item Refund') then
+                return GetPerkActive(perkId) == true
+            end
+        end
+    end
+
+    return false
+end
+
+ScootsVendorForge.getFreeBagSlots = function()
+    local freeSlots = 0
+
+    for bagIndex = 0, 4 do
+        local bagSlots = GetContainerNumSlots(bagIndex)
+        for slotIndex = 1, bagSlots do
+            local itemLink = select(7, GetContainerItemInfo(bagIndex, slotIndex))
+            
+            if(itemLink == nil) then
+                freeSlots = freeSlots + 1
+            end
+        end
+    end
+    
+    return freeSlots
+end
+
+ScootsVendorForge.canAfford = function(itemIndex, quantity)
+    local _, _, copperPrice, _, _, _, extendedCost = GetMerchantItemInfo(itemIndex)
+    
+    if(GetMoney() < (copperPrice * quantity)) then
+        return false
+    end
+    
+    if(extendedCost == 1) then
+        local _, _, itemCount = GetMerchantItemCostInfo(itemIndex)
+        
+        if(itemCount > 0) then
+            for currencyIndex = 1, 3 do
+                local _, currencyCount, currencyItemLink = GetMerchantItemCostItem(itemIndex, currencyIndex)
+                
+                if(currencyItemLink) then
+                    local currencyItemName = GetItemInfo(currencyItemLink)
+                    
+                    if(inventory[currencyItemLink] ~= nil) then
+                        if(inventory[currencyItemLink] < (currencyCount * quantity)) then
+                            return false
+                        end
+                    elseif(currencies[currencyItemName] ~= nil) then
+                        if(currencies[currencyItemName] < currencyCount) then
+                            return false
+                        end
+                    else
+                        return false
+                    end
+                end
+            end
+        end
+    end
+    
+    return true
 end

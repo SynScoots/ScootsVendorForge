@@ -39,9 +39,26 @@ ScootsVendorForge.openPanel = function()
         ScootsVendorForge.panelOpen = true
     end
     
+    ScootsVendorForge.quantityToPurchase = nil
+    ScootsVendorForge.startedAutoPurchase = false
     ScootsVendorForge.cacheFailText:Hide()
     ScootsVendorForge.loadingIcon:Hide()
     ScootsVendorForge.loadingText:Hide()
+end
+
+ScootsVendorForge.quantityOnTextChanged = function()
+    local check = ScootsVendorForge.frames.quantity:GetNumber()
+    
+    if(check ~= nil) then
+        if(check <= 1) then
+            ScootsVendorForge.frames.decrement:Disable()
+        else
+            ScootsVendorForge.frames.decrement:Enable()
+        end
+    else
+        ScootsVendorForge.frames.quantity:SetText('1')
+        ScootsVendorForge.frames.decrement:Disable()
+    end
 end
 
 ScootsVendorForge.cacheMerchant = function(elapsed)
@@ -122,6 +139,7 @@ ScootsVendorForge.refreshPanel = function()
                         ScootsVendorForge.purchaseItemId = nil
                         ScootsVendorForge.waitingForSoldItem = false
                         ScootsVendorForge.waitingForPurchasedItem = false
+                        ScootsVendorForge.startedAutoPurchase = false
                     end
                 
                     table.insert(inventoryEquipment, {
@@ -163,63 +181,18 @@ ScootsVendorForge.refreshPanel = function()
         and bit.band(tags, 96) == 64
         and CanAttuneItemHelper(itemId) > 0
         and GetItemAttuneForge(itemId) < 3
-        and ScootsVendorForge.getInventoryAttuneLevel(itemId, inventoryEquipment) < 3) then
-            local add = true
+        and ScootsVendorForge.getInventoryAttuneLevel(itemId, inventoryEquipment) < 3
+        and ScootsVendorForge.canAfford(itemIndex, 1)) then
+            local item = {
+                ['index'] = itemIndex,
+                ['id'] = itemId,
+                ['link'] = itemLink,
+                ['forge'] = GetItemAttuneForge(itemId)
+            }
             
-            repeat
-                local _, _, copperPrice, _, _, _, extendedCost = GetMerchantItemInfo(itemIndex)
-                
-                if(GetMoney() < copperPrice) then
-                    add = false
-                    break
-                end
-                
-                if(extendedCost == 1) then
-                    local _, _, itemCount = GetMerchantItemCostInfo(itemIndex)
-                    
-                    if(itemCount > 0) then
-                        for currencyIndex = 1, 3 do
-                            local _, currencyCount, currencyItemLink = GetMerchantItemCostItem(itemIndex, currencyIndex)
-                            
-                            if(currencyItemLink) then
-                                local currencyItemName = GetItemInfo(currencyItemLink)
-                                
-                                if(inventory[currencyItemLink] ~= nil) then
-                                    if(inventory[currencyItemLink] < currencyCount) then
-                                        add = false
-                                        break
-                                    end
-                                elseif(currencies[currencyItemName] ~= nil) then
-                                    if(currencies[currencyItemName] < currencyCount) then
-                                        add = false
-                                        break
-                                    end
-                                else
-                                    add = false
-                                    break
-                                end
-                            end
-                        end
-                        
-                        if(add == false) then
-                            break
-                        end
-                    end
-                end
-            until true
-        
-            if(add) then
-                local item = {
-                    ['index'] = itemIndex,
-                    ['id'] = itemId,
-                    ['link'] = itemLink,
-                    ['forge'] = GetItemAttuneForge(itemId)
-                }
-                
-                frameIndex = frameIndex + 1
-                offset = ScootsVendorForge.setItemFrame(frameIndex, item, offset)
-                table.insert(purchasableItems, item)
-            end
+            frameIndex = frameIndex + 1
+            offset = ScootsVendorForge.setItemFrame(frameIndex, item, offset)
+            table.insert(purchasableItems, item)
         end
     end
     
@@ -239,22 +212,50 @@ ScootsVendorForge.refreshPanel = function()
                 ScootsVendorForge.purchaseItemId = nil
                 ScootsVendorForge.waitingForSoldItem = false
                 ScootsVendorForge.waitingForPurchasedItem = false
+                ScootsVendorForge.startedAutoPurchase = false
                 return nil
             end
             
-            local sold = false
             for _, item in pairs(inventoryEquipment) do
                 if(item.id == ScootsVendorForge.purchaseItemId) then
+                    if(ScootsVendorForge.soldQuantity == nil) then
+                        ScootsVendorForge.soldQuantity = 0
+                    end
+                
                     UseContainerItem(item.bag, item.slot)
-                    sold = true
+                    ScootsVendorForge.soldQuantity = ScootsVendorForge.soldQuantity + 1
+                    ScootsVendorForge.waitingForSoldItem = true
                 end
             end
             
-            if(sold) then
-                ScootsVendorForge.waitingForSoldItem = true
-            else
-                BuyMerchantItem(purchaseItemIndex, 1)
-                ScootsVendorForge.waitingForPurchasedItem = true
+            if(not ScootsVendorForge.waitingForSoldItem) then
+                if(ScootsVendorForge.startedAutoPurchase and ScootsVendorForge.soldQuantity < ScootsVendorForge.quantityToPurchase) then
+                    ScootsVendorForge.waitingForSoldItem = true
+                else
+                    repeat
+                        if(not ScootsVendorForge.startedAutoPurchase) then
+                            if(not ScootsVendorForge.noRefundPerkEnabled()) then
+                                print('\124cff' .. '98fb98' .. ScootsVendorForge.title .. '\124r' .. ' - ' .. '\124cff' .. 'ff3333' .. 'Perk "Disable Item Refund" not enabled.' .. '\124r')
+                                break
+                            elseif(ScootsVendorForge.frames.quantity:GetNumber() > ScootsVendorForge.getFreeBagSlots()) then
+                                print('\124cff' .. '98fb98' .. ScootsVendorForge.title .. '\124r' .. ' - ' .. '\124cff' .. 'ff3333' .. 'Not enough free bag slots.' .. '\124r')
+                                break
+                            end
+                        end
+                        
+                        if(not ScootsVendorForge.canAfford(purchaseItemIndex, ScootsVendorForge.frames.quantity:GetNumber())) then
+                            print('\124cff' .. '98fb98' .. ScootsVendorForge.title .. '\124r' .. ' - ' .. '\124cff' .. 'ff3333' .. 'Unable to afford that quantity.' .. '\124r')
+                            break
+                        end
+                        
+                        ScootsVendorForge.soldQuantity = 0
+                        ScootsVendorForge.purchasedQuantity = 0
+                        ScootsVendorForge.quantityToPurchase = ScootsVendorForge.frames.quantity:GetNumber()
+                        BuyMerchantItem(purchaseItemIndex, ScootsVendorForge.quantityToPurchase)
+                        ScootsVendorForge.waitingForPurchasedItem = true
+                        ScootsVendorForge.startedAutoPurchase = true
+                    until true
+                end
             end
         end
     end
@@ -284,11 +285,14 @@ ScootsVendorForge.watchForPurchasedItem = function()
             local itemId = ScootsVendorForge.extractId(itemLink)
             
             if(itemId == ScootsVendorForge.purchaseItemId) then
-                ScootsVendorForge.waitingForPurchasedItem = false
-                ScootsVendorForge.refreshPanelEvent = true
-                return nil
+                ScootsVendorForge.purchasedQuantity = ScootsVendorForge.purchasedQuantity + 1
             end
         end
+    end
+    
+    if(ScootsVendorForge.purchasedQuantity >= ScootsVendorForge.quantityToPurchase) then
+        ScootsVendorForge.waitingForPurchasedItem = false
+        ScootsVendorForge.refreshPanelEvent = true
     end
 end
 
@@ -297,6 +301,7 @@ ScootsVendorForge.updateLoop = function(self, elapsed)
     
     if(ScootsVendorForge.vendorOpen and not ScootsVendorForge.panelOpen and not ScootsVendorForge.uiBuilt) then
         ScootsVendorForge.buildUi()
+        ScootsVendorForge.quantityOnTextChanged(ScootsVendorForge.frames.quantity)
         ScootsVendorForge.showEvent = true
         ScootsVendorForge.refreshPanelEvent = true
     end

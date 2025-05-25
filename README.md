@@ -10,4 +10,4 @@ Download this repository, then extract the `ScootsVendorForge` subdirectory from
 
 ![Rapid purchases stopping at lightforged](./img/purchase.png)
 
-![The user interface](./img/ui.png)
+![The user interface](./img/ui2.png)
