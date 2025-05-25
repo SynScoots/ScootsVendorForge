@@ -171,7 +171,7 @@ ScootsVendorForge.canAfford = function(itemIndex, quantity)
                             return false
                         end
                     elseif(ScootsVendorForge.currencies[currencyItemName] ~= nil) then
-                        if(ScootsVendorForge.currencies[currencyItemName] < currencyCount) then
+                        if(ScootsVendorForge.currencies[currencyItemName] < (currencyCount * quantity)) then
                             return false
                         end
                     else
