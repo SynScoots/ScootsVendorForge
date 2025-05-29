@@ -229,7 +229,7 @@ ScootsVendorForge.refreshPanel = function()
             end
             
             if(not ScootsVendorForge.waitingForSoldItem) then
-                if(ScootsVendorForge.startedAutoPurchase and ScootsVendorForge.soldQuantity < ScootsVendorForge.quantityToPurchase) then
+                if(ScootsVendorForge.startedAutoPurchase and ScootsVendorForge.soldQuantity < 1) then
                     ScootsVendorForge.waitingForSoldItem = true
                 else
                     repeat
