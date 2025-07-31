@@ -113,7 +113,6 @@ end
 ScootsVendorForge.refreshPanel = function()
     ScootsVendorForge.refreshPanelEvent = false
     ScootsVendorForge.hideAllItemFrames()
-	--ScootsVendorForge.hideAllCurrencyFrames()
     ScootsVendorForge.loadingIcon:Hide()
     ScootsVendorForge.loadingText:Hide()
     

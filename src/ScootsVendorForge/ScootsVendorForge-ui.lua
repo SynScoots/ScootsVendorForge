@@ -1,7 +1,6 @@
 ScootsVendorForge = ScootsVendorForge or {}
 
 ScootsVendorForge.frameStrata = 'MEDIUM'
---ScootsVendorForge.frames.currency = {}
 ScootsVendorForge.textSize = 10
 ScootsVendorForge.borderThickness = 0.7
 ScootsVendorForge.currencyHeight = 10
