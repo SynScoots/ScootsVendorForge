@@ -185,16 +185,20 @@ ScootsVendorForge.canAfford = function(itemIndex, quantity)
     return true
 end
 
-
-function ScootsVendorForge.buildCurrencyArray(item,computeExpected)
+function ScootsVendorForge.buildCurrencyArray(item, computeExpected)
     local currencies = {}
+    local prestigeForgePower = GetCustomGameData(29, 1494) / 100
     local forgeMult = {
-        (1/((1+(GetCustomGameData(29, 1494)/100))*0.05)),
-        (1/((1+(GetCustomGameData(29, 1494)/100))*0.007)),
-        (1/((1+(GetCustomGameData(29, 1494)/100))*0.001))
+        1 / ((1 + prestigeForgePower) * 0.05),
+        1 / ((1 + prestigeForgePower) * 0.007),
+        1 / ((1 + prestigeForgePower) * 0.001),
     }
     local mult = 1
-    if computeExpected then mult = forgeMult[ScootsVendorForge.getOption('forgelevel')] end
+    
+    if(computeExpected) then
+        mult = forgeMult[ScootsVendorForge.getOption('forgelevel')]
+    end
+    
     if(item.cost ~= nil and item.cost > 0) then
         local cost = item.cost * mult
         local gold = math.floor(cost / 10000)
@@ -255,7 +259,7 @@ function ScootsVendorForge.buildCurrencyArray(item,computeExpected)
                     table.insert(currencies, {
                         ['name'] = itemName,
                         ['icon'] = currencyTexture,
-                        ['amnt'] =  math.floor((currencyCount * mult) +0.5)
+                        ['amnt'] =  math.floor((currencyCount * mult) + 0.5)
                     })
                 end
             end
@@ -265,9 +269,7 @@ function ScootsVendorForge.buildCurrencyArray(item,computeExpected)
     return currencies
 end
 
-
-
-function ScootsVendorForge.getCurrencyFrame(itemIndex,index)
+function ScootsVendorForge.getCurrencyFrame(itemIndex, index)
     if(ScootsVendorForge.frames.items[itemIndex].currency[index] ~= nil) then
         ScootsVendorForge.frames.items[itemIndex].currency[index]:Show()
         return ScootsVendorForge.frames.items[itemIndex].currency[index]
@@ -296,7 +298,7 @@ function ScootsVendorForge.getCurrencyFrame(itemIndex,index)
     return ScootsVendorForge.frames.items[itemIndex].currency[index]
 end
 
-function ScootsVendorForge.getExpCurrencyFrame(itemIndex,index)
+function ScootsVendorForge.getExpCurrencyFrame(itemIndex, index)
     if(ScootsVendorForge.frames.items[itemIndex].expCurrency[index] ~= nil) then
         ScootsVendorForge.frames.items[itemIndex].expCurrency[index]:Show()
         return ScootsVendorForge.frames.items[itemIndex].expCurrency[index]

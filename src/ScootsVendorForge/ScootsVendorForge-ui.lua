@@ -5,9 +5,7 @@ ScootsVendorForge.textSize = 10
 ScootsVendorForge.borderThickness = 0.7
 ScootsVendorForge.currencyHeight = 10
 ScootsVendorForge.currencySize = 14
-
 ScootsVendorForge.totalAttuneCurrency = {}
-
 
 ScootsVendorForge.buildUi = function()
     ScootsVendorForge.uiBuilt = true
@@ -326,7 +324,6 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
         ScootsVendorForge.frames.items[index].text:SetWordWrap(false)
         ScootsVendorForge.frames.items[index].text:SetNonSpaceWrap(false)
         
-        
         ScootsVendorForge.frames.items[index].expCostText = ScootsVendorForge.frames.items[index]:CreateFontString(nil, 'ARTWORK')
         ScootsVendorForge.frames.items[index].expCostText:SetWidth(ScootsVendorForge.frames.scrollChild:GetWidth() - (12 + ScootsVendorForge.frames.items[index].icon:GetWidth()))
         ScootsVendorForge.frames.items[index].expCostText:SetFontObject('GameFontNormal')
@@ -350,14 +347,13 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
     
     ScootsVendorForge.frames.items[index]:SetHeight(math.max(ScootsVendorForge.frames.items[index].icon:GetHeight(), ScootsVendorForge.frames.items[index].text:GetHeight()) + 8)
     
-    
-    local currencies = ScootsVendorForge.buildCurrencyArray(item,false)
+    local currencies = ScootsVendorForge.buildCurrencyArray(item, false)
     ScootsVendorForge.frames.items[index].currency ={}
     ScootsVendorForge.currencyIndex = 0
     leftOffset = 30
     for currencyIndex, currency in ipairs(currencies) do
         ScootsVendorForge.currencyIndex = ScootsVendorForge.currencyIndex + 1
-        local currencyFrame =  ScootsVendorForge.getCurrencyFrame(index,ScootsVendorForge.currencyIndex)
+        local currencyFrame =  ScootsVendorForge.getCurrencyFrame(index, ScootsVendorForge.currencyIndex)
         
         currencyFrame:SetParent(ScootsVendorForge.frames.items[index])
         currencyFrame.currencyName = currency.name
@@ -383,13 +379,13 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
         end
     end
     
-    local expCurrencies = ScootsVendorForge.buildCurrencyArray(item,true)
+    local expCurrencies = ScootsVendorForge.buildCurrencyArray(item, true)
     ScootsVendorForge.frames.items[index].expCurrency ={}
     ScootsVendorForge.currencyIndex = 0
     leftOffset = 92
     for currencyIndex, expCurrency in ipairs(expCurrencies) do
         ScootsVendorForge.currencyIndex = ScootsVendorForge.currencyIndex + 1
-        local expCurrencyFrame =  ScootsVendorForge.getExpCurrencyFrame(index,ScootsVendorForge.currencyIndex)
+        local expCurrencyFrame =  ScootsVendorForge.getExpCurrencyFrame(index, ScootsVendorForge.currencyIndex)
         
         expCurrencyFrame:SetParent(ScootsVendorForge.frames.items[index])
         expCurrencyFrame.expCurrencyName = expCurrency.name
@@ -426,7 +422,6 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
     ScootsVendorForge.frames.items[index]:SetScript('OnLeave', function()
         ScootsVendorForge.frames.items[index].hover = false
        
-        
         GameTooltip_Hide(ScootsVendorForge.frames.items[index])
         SetCursor(nil)
     end)
