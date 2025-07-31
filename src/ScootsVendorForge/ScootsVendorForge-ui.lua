@@ -273,7 +273,7 @@ ScootsVendorForge.setForgeLevelValues = function(self, level, menuList)
         info.func = function()
             UIDropDownMenu_SetText(ScootsVendorForge.frames.forgeLevel, choice[2])
             ScootsVendorForge.setOption('forgelevel', choice[1])
-			ScootsVendorForge.refreshPanel()
+            ScootsVendorForge.refreshPanel()
         end
         
         UIDropDownMenu_AddButton(info, level)
@@ -283,16 +283,16 @@ end
 ScootsVendorForge.hideAllItemFrames = function()
     for _, frame in pairs(ScootsVendorForge.frames.items) do
         frame:Hide()
-		if frame.currency then
-			for _, subframe in pairs(frame.currency) do
-				subframe:Hide()
-			end
-		end
-		if frame.expCurrency then
-			for _, subframe in pairs(frame.expCurrency) do
-				subframe:Hide()
-			end
-		end
+        if frame.currency then
+            for _, subframe in pairs(frame.currency) do
+                subframe:Hide()
+            end
+        end
+        if frame.expCurrency then
+            for _, subframe in pairs(frame.expCurrency) do
+                subframe:Hide()
+            end
+        end
     end
 end
 
@@ -323,11 +323,11 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
         ScootsVendorForge.frames.items[index].text:SetFontObject('GameFontNormal')
         ScootsVendorForge.frames.items[index].text:SetPoint('TOPLEFT', ScootsVendorForge.frames.items[index].icon:GetWidth() + 8, -4)
         ScootsVendorForge.frames.items[index].text:SetJustifyH('LEFT')
-		ScootsVendorForge.frames.items[index].text:SetWordWrap(false)
-		ScootsVendorForge.frames.items[index].text:SetNonSpaceWrap(false)
-		
-		
-		ScootsVendorForge.frames.items[index].expCostText = ScootsVendorForge.frames.items[index]:CreateFontString(nil, 'ARTWORK')
+        ScootsVendorForge.frames.items[index].text:SetWordWrap(false)
+        ScootsVendorForge.frames.items[index].text:SetNonSpaceWrap(false)
+        
+        
+        ScootsVendorForge.frames.items[index].expCostText = ScootsVendorForge.frames.items[index]:CreateFontString(nil, 'ARTWORK')
         ScootsVendorForge.frames.items[index].expCostText:SetWidth(ScootsVendorForge.frames.scrollChild:GetWidth() - (12 + ScootsVendorForge.frames.items[index].icon:GetWidth()))
         ScootsVendorForge.frames.items[index].expCostText:SetFontObject('GameFontNormal')
         ScootsVendorForge.frames.items[index].expCostText:SetPoint('BOTTOMLEFT', ScootsVendorForge.frames.items[index], 'BOTTOMLEFT', 30, ScootsVendorForge.borderThickness * 5)
@@ -344,16 +344,16 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
     
     ScootsVendorForge.frames.items[index].text:SetTextColor(colours.front.r, colours.front.g, colours.front.b)
     ScootsVendorForge.frames.items[index].text:SetText(select(1, GetItemInfo(item.link)))
-	
-	ScootsVendorForge.frames.items[index].expCostText:SetText("Exp. Cost: ")
-	ScootsVendorForge.frames.items[index].expCostText:Hide()
+    
+    ScootsVendorForge.frames.items[index].expCostText:SetText("Exp. Cost: ")
+    ScootsVendorForge.frames.items[index].expCostText:Hide()
     
     ScootsVendorForge.frames.items[index]:SetHeight(math.max(ScootsVendorForge.frames.items[index].icon:GetHeight(), ScootsVendorForge.frames.items[index].text:GetHeight()) + 8)
     
-	
-	local currencies = ScootsVendorForge.buildCurrencyArray(item,false)
+    
+    local currencies = ScootsVendorForge.buildCurrencyArray(item,false)
     ScootsVendorForge.frames.items[index].currency ={}
-	ScootsVendorForge.currencyIndex = 0
+    ScootsVendorForge.currencyIndex = 0
     leftOffset = 30
     for currencyIndex, currency in ipairs(currencies) do
         ScootsVendorForge.currencyIndex = ScootsVendorForge.currencyIndex + 1
@@ -361,7 +361,7 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
         
         currencyFrame:SetParent(ScootsVendorForge.frames.items[index])
         currencyFrame.currencyName = currency.name
-		
+        
         currencyFrame.text:SetText('|T' .. currency.icon .. ':' .. ScootsVendorForge.currencySize .. ':' ..  ScootsVendorForge.currencySize .. '|t' .. currency.amnt)
         currencyFrame:SetSize(currencyFrame.text:GetStringWidth(), ScootsVendorForge.currencySize)
         
@@ -382,10 +382,10 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
             ScootsVendorForge.totalAttuneCurrency[currency.name].total = ScootsVendorForge.totalAttuneCurrency[currency.name].total + currency.amnt
         end
     end
-	
-	local expCurrencies = ScootsVendorForge.buildCurrencyArray(item,true)
+    
+    local expCurrencies = ScootsVendorForge.buildCurrencyArray(item,true)
     ScootsVendorForge.frames.items[index].expCurrency ={}
-	ScootsVendorForge.currencyIndex = 0
+    ScootsVendorForge.currencyIndex = 0
     leftOffset = 92
     for currencyIndex, expCurrency in ipairs(expCurrencies) do
         ScootsVendorForge.currencyIndex = ScootsVendorForge.currencyIndex + 1
@@ -393,7 +393,7 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
         
         expCurrencyFrame:SetParent(ScootsVendorForge.frames.items[index])
         expCurrencyFrame.expCurrencyName = expCurrency.name
-		
+        
         expCurrencyFrame.text:SetText('|T' .. expCurrency.icon .. ':' .. ScootsVendorForge.currencySize .. ':' ..  ScootsVendorForge.currencySize .. '|t' .. expCurrency.amnt)
         expCurrencyFrame:SetSize(expCurrencyFrame.text:GetStringWidth(), ScootsVendorForge.currencySize)
         
@@ -413,16 +413,16 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
             
             ScootsVendorForge.totalAttuneCurrency[expCurrency.name].total = ScootsVendorForge.totalAttuneCurrency[expCurrency.name].total + expCurrency.amnt
         end
-		expCurrencyFrame:Hide()
+        expCurrencyFrame:Hide()
     end
-	
+    
     ScootsVendorForge.frames.items[index]:SetScript('OnEnter', function()
         ScootsVendorForge.frames.items[index].hover = true
         
         GameTooltip:SetOwner(ScootsVendorForge.frames.items[index], 'ANCHOR_RIGHT')
         GameTooltip:SetHyperlink(item.link)
     end)
-	
+    
     ScootsVendorForge.frames.items[index]:SetScript('OnLeave', function()
         ScootsVendorForge.frames.items[index].hover = false
        
@@ -460,36 +460,36 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
         if(ScootsVendorForge.frames.items[index].hover) then
             ShowMerchantSellCursor(item.index)
         end
-		if(ScootsVendorForge.frames.items[index]:IsMouseOver() and not ScootsVendorForge.frames.items[index].expCostText:IsVisible()) then
-				
-			ScootsVendorForge.frames.items[index].background:SetTexture(colours.back.r, colours.back.g, colours.back.b, colours.back.a + 0.1)
-			ScootsVendorForge.frames.items[index].borderTop:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a + 0.1)
-			ScootsVendorForge.frames.items[index].borderBottom:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a + 0.1)
-			
+        if(ScootsVendorForge.frames.items[index]:IsMouseOver() and not ScootsVendorForge.frames.items[index].expCostText:IsVisible()) then
+                
+            ScootsVendorForge.frames.items[index].background:SetTexture(colours.back.r, colours.back.g, colours.back.b, colours.back.a + 0.1)
+            ScootsVendorForge.frames.items[index].borderTop:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a + 0.1)
+            ScootsVendorForge.frames.items[index].borderBottom:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a + 0.1)
+            
             for _, frame in pairs(ScootsVendorForge.frames.items[index].currency) do
-				frame:Hide()
-			end
-			
-			ScootsVendorForge.frames.items[index].expCostText:Show()
-			for _, frame in pairs(ScootsVendorForge.frames.items[index].expCurrency) do
-				frame:Show()
-			end
+                frame:Hide()
+            end
+            
+            ScootsVendorForge.frames.items[index].expCostText:Show()
+            for _, frame in pairs(ScootsVendorForge.frames.items[index].expCurrency) do
+                frame:Show()
+            end
         end
            
         if(not ScootsVendorForge.frames.items[index]:IsMouseOver() and ScootsVendorForge.frames.items[index].expCostText:IsVisible()) then
-		
-			ScootsVendorForge.frames.items[index].background:SetTexture(colours.back.r, colours.back.g, colours.back.b, colours.back.a)
-			ScootsVendorForge.frames.items[index].borderTop:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a)
-			ScootsVendorForge.frames.items[index].borderBottom:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a)
-			
+        
+            ScootsVendorForge.frames.items[index].background:SetTexture(colours.back.r, colours.back.g, colours.back.b, colours.back.a)
+            ScootsVendorForge.frames.items[index].borderTop:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a)
+            ScootsVendorForge.frames.items[index].borderBottom:SetTexture(colours.front.r, colours.front.g, colours.front.b, colours.front.a)
+            
             ScootsVendorForge.frames.items[index].expCostText:Hide()
-			for _, frame in pairs(ScootsVendorForge.frames.items[index].expCurrency) do
-				frame:Hide()
-			end
-			
-			for _, frame in pairs(ScootsVendorForge.frames.items[index].currency) do
-				frame:Show()
-			end
+            for _, frame in pairs(ScootsVendorForge.frames.items[index].expCurrency) do
+                frame:Hide()
+            end
+            
+            for _, frame in pairs(ScootsVendorForge.frames.items[index].currency) do
+                frame:Show()
+            end
         end
     end)
     

@@ -169,14 +169,14 @@ ScootsVendorForge.refreshPanel = function()
     local purchasableItems = {}
     local frameIndex = 0
     local offset = 0
-	ScootsVendorForge.currencyIndex = 0
-	ScootsVendorForge.allAttuneCurrencies = {}
+    ScootsVendorForge.currencyIndex = 0
+    ScootsVendorForge.allAttuneCurrencies = {}
     ScootsVendorForge.totalAttuneCurrency = {}
     for itemIndex = 1, GetMerchantNumItems() do
         local itemId, itemLink = Custom_GetMerchantItem(itemIndex)
         local tags = GetItemTagsCustom(itemId)
         local rarity = select(3, GetItemInfo(itemLink))
-		local _, _, price, _, _, isUsable, extendedCost = GetMerchantItemInfo(itemIndex)
+        local _, _, price, _, _, isUsable, extendedCost = GetMerchantItemInfo(itemIndex)
         if( rarity
         and rarity >= 2
         and rarity <= 4

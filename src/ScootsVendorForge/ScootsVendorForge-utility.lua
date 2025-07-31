@@ -188,15 +188,15 @@ end
 
 function ScootsVendorForge.buildCurrencyArray(item,computeExpected)
     local currencies = {}
-	local forgeMult = {
-		(1/((1+(GetCustomGameData(29, 1494)/100))*0.05)),
-		(1/((1+(GetCustomGameData(29, 1494)/100))*0.007)),
-		(1/((1+(GetCustomGameData(29, 1494)/100))*0.001))
-	}
-	local mult = 1
-	if computeExpected then mult = forgeMult[ScootsVendorForge.getOption('forgelevel')] end
+    local forgeMult = {
+        (1/((1+(GetCustomGameData(29, 1494)/100))*0.05)),
+        (1/((1+(GetCustomGameData(29, 1494)/100))*0.007)),
+        (1/((1+(GetCustomGameData(29, 1494)/100))*0.001))
+    }
+    local mult = 1
+    if computeExpected then mult = forgeMult[ScootsVendorForge.getOption('forgelevel')] end
     if(item.cost ~= nil and item.cost > 0) then
-		local cost = item.cost * mult
+        local cost = item.cost * mult
         local gold = math.floor(cost / 10000)
         if(gold > 0) then
             table.insert(currencies, {
@@ -216,7 +216,7 @@ function ScootsVendorForge.buildCurrencyArray(item,computeExpected)
         end
         
         local copper = cost % 100
-		copper = math.floor(copper + 0.5)
+        copper = math.floor(copper + 0.5)
         if(copper > 0) then
             table.insert(currencies, {
                 ['name'] = 'Copper',
