@@ -351,12 +351,19 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
     ScootsVendorForge.frames.items[index].currency ={}
     ScootsVendorForge.currencyIndex = 0
     leftOffset = 30
+    
     for currencyIndex, currency in ipairs(currencies) do
         ScootsVendorForge.currencyIndex = ScootsVendorForge.currencyIndex + 1
         local currencyFrame =  ScootsVendorForge.getCurrencyFrame(index, ScootsVendorForge.currencyIndex)
         
         currencyFrame:SetParent(ScootsVendorForge.frames.items[index])
         currencyFrame.currencyName = currency.name
+        
+        if(currency.icon == nil) then
+            printr(item)
+            printr(currencies)
+            printr(currency)
+        end
         
         currencyFrame.text:SetText('|T' .. currency.icon .. ':' .. ScootsVendorForge.currencySize .. ':' ..  ScootsVendorForge.currencySize .. '|t' .. currency.amnt)
         currencyFrame:SetSize(currencyFrame.text:GetStringWidth(), ScootsVendorForge.currencySize)
@@ -383,6 +390,7 @@ ScootsVendorForge.setItemFrame = function(index, item, offset)
     ScootsVendorForge.frames.items[index].expCurrency ={}
     ScootsVendorForge.currencyIndex = 0
     leftOffset = 92
+    
     for currencyIndex, expCurrency in ipairs(expCurrencies) do
         ScootsVendorForge.currencyIndex = ScootsVendorForge.currencyIndex + 1
         local expCurrencyFrame =  ScootsVendorForge.getExpCurrencyFrame(index, ScootsVendorForge.currencyIndex)

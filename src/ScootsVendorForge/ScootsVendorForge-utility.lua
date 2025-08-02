@@ -234,6 +234,14 @@ function ScootsVendorForge.buildCurrencyArray(item, computeExpected)
         local honorPoints, arenaPoints, itemCount = GetMerchantItemCostInfo(item.index) 
         
         if(honorPoints > 0) then
+            if(ScootsVendorForge.honorIcon == nil) then
+                if(UnitFactionGroup('player') == 'Alliance') then
+                    ScootsVendorForge.honorIcon = 'Interface/PVPFrame/PVP-Currency-Alliance'
+                else
+                    ScootsVendorForge.honorIcon = 'Interface/PVPFrame/PVP-Currency-Horde'
+                end
+            end
+        
             table.insert(currencies, {
                 ['name'] = 'Honor Points',
                 ['icon'] = ScootsVendorForge.honorIcon,
